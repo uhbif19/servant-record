@@ -11,5 +11,5 @@ type TestAPI = "users" :> QueryParamsRecord User :> Post '[JSON] NoContent
 
 Derive `Generic` for your record to use it.
 
-`HasLink` currently does not actuallyadd params, because of
+`HasLink` currently does not actually add params, because of
 [issue](https://github.com/haskell-servant/servant/issues/1232).
