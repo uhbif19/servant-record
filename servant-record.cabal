@@ -5,7 +5,12 @@ license:            MIT
 author:             uhbif19
 maintainer:         uhbif19@gmail.com
 build-type: Simple
-extra-source-files: CHANGELOG.md
+extra-source-files:
+    README.md
+    CHANGELOG.md
+synopsis: Servant combinator to parse query params as Haskell record
+description: Servant combinator to parse query params as Haskell record
+category: Servant, Web
 
 common common
     build-depends:
