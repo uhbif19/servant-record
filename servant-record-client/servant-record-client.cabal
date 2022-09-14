@@ -1,0 +1,52 @@
+cabal-version:      2.4
+name:               servant-record-client
+version:            0.1.0.0
+license:            MIT
+author:             uhbif19
+maintainer:         uhbif19@gmail.com
+build-type: Simple
+synopsis: Servant combinator to parse query params as Haskell record. Client implementation.
+description: Servant combinator to parse query params as Haskell record. Client implementation.
+category: Servant, Web
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+common common
+    build-depends:
+        base                          >= 4.15.1 && < 4.16,
+        containers                    >= 0.6.4 && < 0.7,
+        text                          >= 1.2.5 && < 1.3,
+        http-api-data                 >= 0.4.3 && < 0.5,
+        http-types                    >= 0.12.3 && < 0.13,
+        servant                       >= 0.19 && < 0.20,
+        servant-client-core           >= 0.19 && < 0.20,
+        servant-record-core           == 0.1.0.0,
+        wai                           >= 3.2.3 && < 3.3,
+    default-extensions:
+        DataKinds
+        TypeOperators
+        TypeFamilies
+        FlexibleContexts
+        FlexibleInstances
+        InstanceSigs
+        PolyKinds
+        TypeApplications
+        ScopedTypeVariables
+        MultiParamTypeClasses
+        NamedFieldPuns
+        DeriveGeneric
+        OverloadedStrings
+    default-language: Haskell2010
+
+library
+    import: common
+    exposed-modules:
+        Servant.Record.Client
+    ghc-options:
+        -fprint-potential-instances
+        -Wall
+        -Wno-orphans
+    hs-source-dirs:
+        src
+

@@ -1,22 +1,17 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Servant.Record where
+module Servant.Record.Server where
 
-import Data.Kind (Type)
-import Data.List (foldl')
-import Data.Map (fromList, toList)
 import Data.Proxy (Proxy (Proxy))
-import Data.Text.Encoding (encodeUtf8)
-import Data.Typeable (typeRep)
 import GHC.Generics (Generic (..))
+import Data.Typeable (typeRep)
+import Data.Map (fromList)
 
-import Network.HTTP.Types.URI (queryToQueryText, urlEncode)
+import Network.HTTP.Types.URI (queryToQueryText)
 import Network.Wai (queryString)
 
+
 import Servant.API ((:>))
-import Servant.Client.Core (HasClient (..))
-import Servant.Client.Core.Request (appendToQueryString)
-import Servant.Links (HasLink (..))
 import Servant.Server (HasServer (..))
 import Servant.Server.Internal.Context (HasContextEntry, getContextEntry)
 import Servant.Server.Internal.Delayed (addParameterCheck)
@@ -29,8 +24,8 @@ import Servant.Server.Internal.ErrorFormatter (
  )
 
 import Servant.Reflection (RecordReflectionRep (..))
+import Servant.Record (QueryParamsRecord)
 
-data QueryParamsRecord (record :: Type)
 
 instance
     ( Generic record
@@ -66,42 +61,4 @@ instance
             Just recordRep -> return $ to recordRep
             Nothing -> queryFailed req
 
-instance
-    ( Generic record
-    , RecordReflectionRep (Rep record)
-    , HasLink endpoint
-    ) =>
-    HasLink (QueryParamsRecord record :> endpoint)
-    where
-    type
-        MkLink (QueryParamsRecord record :> endpoint) a =
-            record -> MkLink endpoint a
 
-    -- Current solution does nothing cuz of
-    -- https://github.com/haskell-servant/servant/issues/1232
-    toLink toA _ link _record = toLink toA (Proxy :: Proxy endpoint) link
-
-instance
-    ( Generic record
-    , RecordReflectionRep (Rep record)
-    , HasClient m endpoint
-    ) =>
-    HasClient m (QueryParamsRecord record :> endpoint)
-    where
-    type
-        Client m (QueryParamsRecord record :> endpoint) =
-            record -> Client m endpoint
-
-    hoistClientMonad pm _ f cl =
-        hoistClientMonad pm (Proxy :: Proxy endpoint) f . cl
-
-    clientWithRoute pm _ req record =
-        clientWithRoute pm (Proxy :: Proxy endpoint) reqWithParams
-      where
-        kvlist = toList . toMapRep . from
-        addParam req_ (k, v) =
-            appendToQueryString
-                k
-                ((Just . urlEncode True . encodeUtf8) v)
-                req_
-        reqWithParams = foldl' addParam req (kvlist record)

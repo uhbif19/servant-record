@@ -3,15 +3,20 @@ module Main where
 import Control.Concurrent (forkIO, killThread)
 import Data.Proxy (Proxy (..))
 import GHC.Generics (Generic, from, to)
+
 import Network.HTTP.Client (defaultManagerSettings, newManager)
 import Network.Wai.Handler.Warp (run)
+import Test.Hspec (describe, hspec, it, shouldBe)
+
 import Servant.API (Get, JSON, (:>))
 import Servant.Client (client, mkClientEnv, runClientM)
 import Servant.Client.Core.BaseUrl (parseBaseUrl)
-import Servant.Record (QueryParamsRecord)
-import Servant.Reflection (fromMapRep, toMapRep)
 import Servant.Server (Application, ErrorFormatter, Handler, Server, errBody, errHeaders, serve)
-import Test.Hspec (describe, hspec, it, shouldBe)
+
+import Servant.Record (QueryParamsRecord)
+import Servant.Record.Server ()
+import Servant.Record.Client ()
+import Servant.Reflection (fromMapRep, toMapRep)
 
 data TestRecord = TestConstructor {testField :: String}
     deriving (Generic, Show, Eq)
