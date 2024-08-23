@@ -1,3 +1,10 @@
+**Project is archived**
+
+After a while I found out that there are a couple of existing solutions that I was not aware of. For example [servant-queryparam-core](https://hackage.haskell.org/package/servant-queryparam-core)
+
+
+---
+
 Servant combinator to parse query params as Haskell record.
 
 Example:
